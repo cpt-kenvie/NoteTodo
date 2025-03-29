@@ -1,0 +1,6 @@
+MONGODB_URI=mongodb://NoteTodo:S7865324.@127.0.0.1:27017/NoteTodo
+DB_NAME=xxxxxxxx
+DB_USER=xxxxxxxx
+DB_PASSWORD=xxxxxxxx
+PORT=3456
+JWT_SECRET=xxxxxxxx

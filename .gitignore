@@ -1,0 +1,11 @@
+/.idea
+/.vscode
+
+/client/node_modules
+/client/dist
+/client/build
+/client/.vscode
+/client/.env
+
+/server/node_modules
+/server/.env
