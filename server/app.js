@@ -21,7 +21,13 @@ var weightsRouter = require('./routes/weights');  // 添加体重管理路由
 var app = express();
 
 // 启用CORS
-app.use(cors());
+// https://note.kenvie.com
+app.use(cors({
+  origin: 'https://note.kenvie.com',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
