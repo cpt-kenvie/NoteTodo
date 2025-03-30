@@ -75,6 +75,12 @@ defineExpose({
               <span>所有事件</span>
             </router-link>
           </li>
+          <li :class="{ active: route.path === '/weight-tracker' }">
+            <router-link to="/weight-tracker" @click="isSidebarOpen = false">
+              <span class="material-icons-round">monitor_weight</span>
+              <span>体重记录</span>
+            </router-link>
+          </li>
           <li :class="{ active: route.path.includes('/admin/users') }">
             <router-link to="/admin/users" @click="isSidebarOpen = false">
               <span class="material-icons-round">admin_panel_settings</span>

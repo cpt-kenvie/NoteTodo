@@ -46,6 +46,10 @@ const handleLogout = () => {
         <span class="material-icons-round">task_alt</span>
         <span>已完成</span>
       </router-link>
+      <router-link to="/weight-tracker" class="nav-link">
+        <span class="material-icons-round">monitor_weight</span>
+        <span>体重记录</span>
+      </router-link>
       <router-link to="/profile" class="nav-link">
         <span class="material-icons-round">account_circle</span>
         <span>个人资料</span>

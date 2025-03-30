@@ -12,6 +12,7 @@ import Register from '../views/Register.vue'
 import AdminUsersNew from '../views/AdminUsersNew.vue'
 import AdminDebug from '../views/AdminDebug.vue'
 import Profile from '../views/Profile.vue'
+import WeightTracker from '../views/WeightTracker.vue'
 
 const routes = [
   {
@@ -42,6 +43,12 @@ const routes = [
     path: '/completed',
     name: 'Completed',
     component: CompletedList,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/weight-tracker',
+    name: 'WeightTracker',
+    component: WeightTracker,
     meta: { requiresAuth: true }
   },
   {
