@@ -79,16 +79,20 @@ const loadData = async () => {
     
     if (response.success && response.data) {
       // 转换服务器数据格式为前端格式
-      // 注意：服务器返回的dates是ISO格式，而前端使用的是YYYY-MM-DD格式
+      // 注意：服务器返回的dates是ISO格式，使用中国时区处理
       userProfile.value = response.data.profile;
       
-      // 映射记录，确保日期格式一致
-      weightRecords.value = response.data.records.map(record => ({
-        _id: record._id,
-        date: new Date(record.date).toISOString().split('T')[0],
-        weight: record.weight,
-        note: record.note
-      }));
+      // 映射记录，确保日期格式一致，使用中国时区
+      weightRecords.value = response.data.records.map(record => {
+        const date = new Date(record.date);
+        const chinaDate = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+        return {
+          _id: record._id,
+          date: chinaDate.toISOString().split('T')[0],
+          weight: record.weight,
+          note: record.note
+        };
+      });
     } else {
       // 如果没有从服务器获取数据，尝试从本地存储获取
       const savedData = localStorage.getItem('weightTrackerData');
@@ -161,15 +165,17 @@ const addWeightRecord = async () => {
     return;
   }
   
-  const today = new Date().toISOString().split('T')[0];
+  // 使用中国时区获取今天的日期（UTC+8）
+  const today = new Date();
+  const chinaDate = new Date(today.getTime() + 8 * 60 * 60 * 1000).toISOString().split('T')[0];
   
   // 检查今天是否已有记录
-  const existingTodayRecord = weightRecords.value.find(record => record.date === today);
+  const existingTodayRecord = weightRecords.value.find(record => record.date === chinaDate);
   
   try {
     // 准备要发送到API的记录
     const recordData = {
-      date: new Date(today).toISOString(), // 确保日期是ISO格式字符串
+      date: new Date(today.getTime() + 8 * 60 * 60 * 1000).toISOString(), // 确保日期是ISO格式字符串，使用中国时区
       weight: currentWeight.value,
       note: currentNote.value || undefined
     };
@@ -189,7 +195,7 @@ const addWeightRecord = async () => {
     } else {
       // 添加新记录并放在数组前面
       weightRecords.value.unshift({
-        date: today,
+        date: chinaDate,
         weight: currentWeight.value,
         note: currentNote.value || undefined
       });
@@ -219,7 +225,7 @@ const addWeightRecord = async () => {
     } else {
       // 添加新记录并放在数组前面
       weightRecords.value.unshift({
-        date: today,
+        date: chinaDate,
         weight: currentWeight.value!,
         note: currentNote.value || undefined
       });
@@ -242,19 +248,23 @@ const saveProfile = async () => {
     return;
   }
   
+  // 获取中国时区的当前时间
+  const now = new Date();
+  const chinaTime = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+  
   // 更新用户资料
   userProfile.value = {
     height: formHeight.value,
     weight: formWeight.value,
     age: formAge.value,
     gender: formGender.value,
-    startDate: new Date().toISOString() // 使用ISO格式日期
+    startDate: chinaTime.toISOString() // 使用中国时区的ISO格式日期
   };
   
   // 添加第一条体重记录
-  const today = new Date().toISOString().split('T')[0];
+  const chinaDate = chinaTime.toISOString().split('T')[0];
   weightRecords.value = [{
-    date: today,
+    date: chinaDate,
     weight: formWeight.value
   }];
   
@@ -286,10 +296,12 @@ const openProfileModal = () => {
   showProfileModal.value = true;
 };
 
-// 格式化日期，接受字符串或Date对象
+// 格式化日期，接受字符串或Date对象，转为中国时区显示
 const formatDate = (dateInput: string | Date) => {
   const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
-  return `${date.getMonth() + 1}月${date.getDate()}日`;
+  // 调整为中国时区
+  const chinaDate = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+  return `${chinaDate.getMonth() + 1}月${chinaDate.getDate()}日`;
 }
 
 // 页面加载时获取数据
@@ -384,8 +396,16 @@ const idealWeight = computed(() => {
   
   // 理想体重 = (身高cm - 100) * 0.9 * 2 (转换为斤)
   const heightInCm = userProfile.value.height;
-  return ((heightInCm - 100) * 0.9 * 2).toFixed(1);
-})
+  const ideal = ((heightInCm - 100) * 0.9 * 2).toFixed(1);
+  console.log('计算理想体重:', ideal); // 调试信息
+  return ideal;
+});
+
+// 转换为数值类型的理想体重（用于图表）
+const idealWeightNumber = computed(() => {
+  if (!idealWeight.value) return null;
+  return parseFloat(idealWeight.value);
+});
 
 // 计算完成天数 - 用于计算目标完成
 // const daysSinceStart = computed(() => {
@@ -572,11 +592,13 @@ const getOriginalIndex = (displayIndex: number) => {
   return weightRecords.value.findIndex(r => r.date === record.date);
 };
 
-// 获取星期几
+// 获取星期几（使用中国时区）
 const getWeekday = (dateStr: string) => {
   const date = new Date(dateStr);
+  // 调整为中国时区
+  const chinaDate = new Date(date.getTime() + 8 * 60 * 60 * 1000);
   const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-  return weekdays[date.getDay()];
+  return weekdays[chinaDate.getDay()];
 };
 
 // 设置60天目标
@@ -738,7 +760,7 @@ const goalCompletionDate = computed(() => {
         </div>
         <WeightEChart 
           :records="weightRecords" 
-          :ideal-weight="idealWeight ? parseFloat(idealWeight) : null" 
+          :ideal-weight="idealWeightNumber" 
         />
       </div>
 
