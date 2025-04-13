@@ -58,7 +58,7 @@ const weightChange = computed(() => {
   
   const latest = weightRecords.value[0].weight;
   const earliest = weightRecords.value[weightRecords.value.length - 1].weight;
-  return latest - earliest;
+  return (latest - earliest).toFixed(2);
 })
 
 // 相比昨天的变化
@@ -673,8 +673,8 @@ const goalCompletionDate = computed(() => {
             <span class="material-icons-round">timeline</span>
           </div>
           <div class="stat-content">
-            <div class="stat-value" :class="{'positive': weightChange && weightChange < 0, 'negative': weightChange && weightChange > 0}">
-              {{ weightChange ? (weightChange > 0 ? '+' : '') + weightChange + ' 斤' : '-' }}
+            <div class="stat-value" :class="{'positive': weightChange && parseFloat(weightChange) < 0, 'negative': weightChange && parseFloat(weightChange) > 0}">
+              {{ weightChange ? (parseFloat(weightChange) > 0 ? '+' : '') + weightChange + ' 斤' : '-' }}
             </div>
             <div class="stat-label">总体变化</div>
           </div>
