@@ -75,6 +75,12 @@ defineExpose({
               <span>所有事件</span>
             </router-link>
           </li>
+          <li :class="{ active: route.path === '/notebooks' }">
+            <router-link to="/notebooks" @click="isSidebarOpen = false">
+              <span class="material-icons-round">auto_stories</span>
+              <span>笔记本</span>
+            </router-link>
+          </li>
           <li :class="{ active: route.path === '/weight-tracker' }">
             <router-link to="/weight-tracker" @click="isSidebarOpen = false">
               <span class="material-icons-round">monitor_weight</span>

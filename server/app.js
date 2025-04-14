@@ -17,6 +17,7 @@ var usersRouter = require('./routes/users');
 var notesRouter = require('./routes/notes');
 var authRouter = require('./routes/auth');  // 添加认证路由
 var weightsRouter = require('./routes/weights');  // 添加体重管理路由
+var notebooksRouter = require('./routes/notebooks');  // 添加笔记本路由
 
 var app = express();
 
@@ -44,6 +45,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/notes', notesRouter);
 app.use('/api/auth', authRouter);  // 添加认证API路由
 app.use('/api/weights', weightsRouter);  // 添加体重管理API路由
+app.use('/api/notebooks', notebooksRouter);  // 添加笔记本API路由
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

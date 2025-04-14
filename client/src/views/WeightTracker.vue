@@ -474,13 +474,13 @@ const weightGoal = computed(() => {
   // 达成率 (如果目标是减重，则计算已减去的部分占总差距的百分比)
   let achievementRate = 0;
   if (gap > 0) { // 需要减重
-    if (weightChange.value && weightChange.value < 0) { // 已经有减重
+    if (weightChange.value && parseFloat(weightChange.value) < 0) { // 已经有减重
       const initialGap = userProfile.value.weight - targetWeight;
       const currentGap = currentWeight - targetWeight;
       achievementRate = Math.min(100, Math.round(((initialGap - currentGap) / initialGap) * 100));
     }
   } else if (gap < 0) { // 需要增重
-    if (weightChange.value && weightChange.value > 0) { // 已经有增重
+    if (weightChange.value && parseFloat(weightChange.value) > 0) { // 已经有增重
       const initialGap = targetWeight - userProfile.value.weight;
       const currentGap = targetWeight - currentWeight;
       achievementRate = Math.min(100, Math.round(((initialGap - currentGap) / initialGap) * 100));

@@ -7,6 +7,7 @@ import NoteList from '../views/NoteList.vue'
 import NoteEdit from '../views/NoteEdit.vue'
 import AllList from '../views/AllList.vue'
 import CompletedList from '../views/CompletedList.vue'
+import NotebookList from '../views/NotebookList.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import AdminUsersNew from '../views/AdminUsersNew.vue'
@@ -43,6 +44,12 @@ const routes = [
     path: '/completed',
     name: 'Completed',
     component: CompletedList,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/notebooks',
+    name: 'Notebooks',
+    component: NotebookList,
     meta: { requiresAuth: true }
   },
   {

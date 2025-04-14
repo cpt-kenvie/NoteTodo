@@ -1,29 +1,20 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const NoteSchema = new Schema({
+const NotebookSchema = new Schema({
   title: {
     type: String,
     required: true,
     trim: true
   },
-  content: {
+  description: {
     type: String,
     trim: true
-  },
-  completed: {
-    type: Boolean,
-    default: false
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  },
-  notebook: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Notebook',
-    default: null
   },
   createdAt: {
     type: Date,
@@ -32,19 +23,24 @@ const NoteSchema = new Schema({
   updatedAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  // 笔记本中的笔记引用
+  notes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Note'
+  }]
 });
 
 // 在保存前更新updatedAt
-NoteSchema.pre('save', function(next) {
+NotebookSchema.pre('save', function(next) {
   this.updatedAt = Date.now();
   next();
 });
 
 // 在更新前设置updatedAt
-NoteSchema.pre('findOneAndUpdate', function() {
+NotebookSchema.pre('findOneAndUpdate', function() {
   this._update = this._update || {};
   this._update.updatedAt = Date.now();
 });
 
-module.exports = mongoose.model('Note', NoteSchema); 
+module.exports = mongoose.model('Notebook', NotebookSchema); 

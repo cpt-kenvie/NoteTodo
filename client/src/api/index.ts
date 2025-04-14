@@ -53,6 +53,16 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
+// 笔记本接口定义
+export interface Notebook {
+  _id: string;
+  title: string;
+  description: string;
+  user: string;
+  notes: string[] | Note[];
+  createdAt: string;
+  updatedAt: string;
+}
 
 // 获取所有笔记
 export const getAllNotes = async (): Promise<ApiResponse<Note[]>> => {
@@ -124,6 +134,111 @@ export const deleteNote = async (id: string): Promise<ApiResponse<{}>> => {
     return {
       success: false,
       data: {},
+      error: error.message || '无法连接到服务器'
+    };
+  }
+};
+
+// 获取所有笔记本
+export const getAllNotebooks = async (): Promise<ApiResponse<Notebook[]>> => {
+  try {
+    const response = await api.get<ApiResponse<Notebook[]>>('/notebooks');
+    return response.data;
+  } catch (error: any) {
+    console.error('获取笔记本失败:', error);
+    return {
+      success: false,
+      data: [],
+      error: error.message || '无法连接到服务器'
+    };
+  }
+};
+
+// 获取单个笔记本
+export const getNotebookById = async (id: string): Promise<ApiResponse<Notebook>> => {
+  try {
+    const response = await api.get<ApiResponse<Notebook>>(`/notebooks/${id}`);
+    return response.data;
+  } catch (error: any) {
+    console.error(`获取笔记本 ${id} 失败:`, error);
+    return {
+      success: false,
+      data: {} as Notebook,
+      error: error.message || '无法连接到服务器'
+    };
+  }
+};
+
+// 创建笔记本
+export const createNotebook = async (notebook: Partial<Notebook>): Promise<ApiResponse<Notebook>> => {
+  try {
+    const response = await api.post<ApiResponse<Notebook>>('/notebooks', notebook);
+    return response.data;
+  } catch (error: any) {
+    console.error('创建笔记本失败:', error);
+    return {
+      success: false,
+      data: {} as Notebook,
+      error: error.message || '无法连接到服务器'
+    };
+  }
+};
+
+// 更新笔记本
+export const updateNotebook = async (id: string, notebook: Partial<Notebook>): Promise<ApiResponse<Notebook>> => {
+  try {
+    const response = await api.put<ApiResponse<Notebook>>(`/notebooks/${id}`, notebook);
+    return response.data;
+  } catch (error: any) {
+    console.error(`更新笔记本 ${id} 失败:`, error);
+    return {
+      success: false,
+      data: {} as Notebook,
+      error: error.message || '无法连接到服务器'
+    };
+  }
+};
+
+// 删除笔记本
+export const deleteNotebook = async (id: string): Promise<ApiResponse<{}>> => {
+  try {
+    const response = await api.delete<ApiResponse<{}>>(`/notebooks/${id}`);
+    return response.data;
+  } catch (error: any) {
+    console.error(`删除笔记本 ${id} 失败:`, error);
+    return {
+      success: false,
+      data: {},
+      error: error.message || '无法连接到服务器'
+    };
+  }
+};
+
+// 添加笔记到笔记本
+export const addNoteToNotebook = async (notebookId: string, noteId: string): Promise<ApiResponse<Notebook>> => {
+  try {
+    const response = await api.put<ApiResponse<Notebook>>(`/notebooks/${notebookId}/notes/${noteId}`);
+    return response.data;
+  } catch (error: any) {
+    console.error(`添加笔记到笔记本失败:`, error);
+    return {
+      success: false,
+      data: {} as Notebook,
+      error: error.message || '无法连接到服务器'
+    };
+  }
+};
+
+// 从笔记本中移除笔记
+export const removeNoteFromNotebook = async (notebookId: string, noteId: string): Promise<ApiResponse<Notebook>> => {
+  try {
+    const response = await api.delete<ApiResponse<Notebook>>(`/notebooks/${notebookId}/notes/${noteId}`);
+    return response.data;
+  } catch (error: any) {
+    console.error(`从笔记本中移除笔记失败:`, error);
+    return {
+      success: false,
+      data: {} as Notebook,
       error: error.message || '无法连接到服务器'
     };
   }
