@@ -72,10 +72,18 @@ exports.addWeightRecord = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('请先创建个人资料', 404));
   }
   
+  // 使用中国时区（UTC+8）处理日期比较
+  // 将输入日期转换为中国时区的日期字符串（YYYY-MM-DD格式）
+  const inputDate = new Date(req.body.date);
+  const chinaInputDate = new Date(inputDate.getTime());
+  const chinaInputDateString = chinaInputDate.toISOString().split('T')[0];
+  
   // 检查是否已存在同一天的记录
-  const existingRecordIndex = weightData.records.findIndex(
-    record => new Date(record.date).toISOString().split('T')[0] === new Date(req.body.date).toISOString().split('T')[0]
-  );
+  const existingRecordIndex = weightData.records.findIndex(record => {
+    const recordDate = new Date(record.date);
+    const chinaRecordDate = new Date(recordDate.getTime());
+    return chinaRecordDate.toISOString().split('T')[0] === chinaInputDateString;
+  });
   
   if (existingRecordIndex !== -1) {
     // 更新现有记录

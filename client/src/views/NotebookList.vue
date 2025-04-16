@@ -215,34 +215,6 @@ const closeInlineEditor = () => {
   inlineError.value = ''
 }
 
-// 打开编辑模态框
-const openEditModal = (notebook: NotebookType | null = null) => {
-  currentNotebook.value = notebook
-  showModal.value = true
-}
-
-// 打开查看模态框
-const openViewModal = async (notebook: NotebookType) => {
-  loading.value = true
-  
-  try {
-    // 获取笔记本详情
-    const response = await getNotebookById(notebook._id)
-    
-    if (response.success) {
-      viewingNotebook.value = response.data
-      showViewModal.value = true
-    } else {
-      toast.error(response.error || '获取笔记本详情失败')
-    }
-  } catch (err: any) {
-    console.error('获取笔记本详情出错:', err)
-    toast.error(err.message || '无法连接到服务器')
-  } finally {
-    loading.value = false
-  }
-}
-
 // 折叠/展开内联查看区域
 const toggleViewerCollapse = () => {
   isViewerCollapsed.value = !isViewerCollapsed.value

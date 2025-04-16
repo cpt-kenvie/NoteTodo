@@ -318,11 +318,33 @@ const toggleStatus = (status: boolean) => {
   border-radius: 6px;
   font-size: 16px;
   margin-bottom: 8px;
+  box-sizing: border-box;
 }
 
 .form-group textarea {
   resize: vertical;
   min-height: 100px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* 自定义滚动条样式 */
+.form-group textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.form-group textarea::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.form-group textarea::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.form-group textarea::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
 
 .status-toggle {

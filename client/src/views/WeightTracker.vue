@@ -624,6 +624,12 @@ const goalCompletionDate = computed(() => {
   today.setDate(today.getDate() + remainingDays.value);
   return today;
 });
+
+// 检查今日是否已有记录
+const isTodayRecorded = computed(() => {
+  const today = new Date().toISOString().split('T')[0];
+  return weightRecords.value.some(record => record.date === today);
+});
 </script>
 
 <template>
@@ -718,6 +724,12 @@ const goalCompletionDate = computed(() => {
         <div class="card-header">
           <span class="material-icons-round card-icon">add_circle</span>
           <h3>今日体重记录</h3>
+          
+          <!-- 添加当日已记录的提示 -->
+          <div v-if="isTodayRecorded" class="today-recorded-badge">
+            <span class="material-icons-round">update</span>
+            当日已记录
+          </div>
         </div>
         <div class="form-content">
           <div class="form-row">
@@ -744,8 +756,8 @@ const goalCompletionDate = computed(() => {
             </div>
           </div>
           <button class="primary-btn" @click="addWeightRecord">
-            <span class="material-icons-round">add</span>
-            记录今日体重
+            <span class="material-icons-round">{{ isTodayRecorded ? 'update' : 'add' }}</span>
+            {{ isTodayRecorded ? '更新今日体重' : '记录今日体重' }}
           </button>
         </div>
       </div>
@@ -1675,5 +1687,21 @@ const goalCompletionDate = computed(() => {
 
 .radio-label input[type="radio"] {
   margin-right: 8px;
+}
+
+.today-recorded-badge {
+  background-color: #6366f1;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.today-recorded-badge .material-icons-round {
+  font-size: 14px;
 }
 </style> 

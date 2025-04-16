@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import type { Notebook as NotebookType } from '../api'
-import { toast } from '../plugins/toast'
 import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
@@ -30,7 +28,7 @@ try {
   console.warn('无法加载 emoji 插件:', error)
 }
 
-const props = defineProps<{
+defineProps<{
   show: boolean
   notebook: NotebookType | null
 }>()
@@ -40,8 +38,6 @@ const emit = defineEmits<{
   (e: 'close'): void
   (e: 'refresh'): void
 }>()
-
-const loading = ref(false)
 
 const closeModal = () => {
   emit('update:show', false)
